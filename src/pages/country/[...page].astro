@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const { page } = Astro.params;
+const res = await fetch(`https://restcountries.com/v3.1/alpha/${page}`);
+const data = await res.json();
+
+let officialName = [];
+let currencies = [];
+let languages = [];
+
+for (const key in data[0].name.nativeName) {
+  officialName.push(data[0].name.nativeName[key].official);
+}
+
+for (const key in data[0].currencies) {
+  currencies.push(data[0].currencies[key].name);
+}
+
+for (const key in data[0].languages) {
+  languages.push(data[0].languages[key]);
+}
+---
+
+<BaseLayout title={`${data[0].name.common} Details`}>
+  <div
+    class="max-w-5xl mx-auto w-full h-[80vh] flex justify-between items-center gap-16"
+  >
+    <div class="">
+      <img src={data[0].flags.png} alt="" class="h-full" />
+    </div>
+    <div class="flex-1">
+      <h1 class="text-4xl font-medium mb-8">{data[0].name.common}</h1>
+      <div class="flex gap-4 mb-14">
+        <div class="left flex flex-col gap-1">
+          <p>
+            <span class="font-medium text-gray-700">Native Name: {` `}</span>
+            {officialName.map((name) => <p class="ml-4"> - {name}</p>)}
+          </p>
+          <p>
+            <span class="font-medium text-gray-700">Population: {` `}</span>
+            {data[0].population.toLocaleString()}
+          </p>
+          <p>
+            <span class="font-medium text-gray-700">Region: {` `}</span>
+            {data[0].region}
+          </p>
+          <p>
+            <span class="font-medium text-gray-700">Sub Region: {` `}</span>
+            {data[0].subregion}
+          </p>
+          <p>
+            <span class="font-medium text-gray-700">Capital: {` `}</span>
+            {data[0].capital}
+          </p>
+        </div>
+        <div class="right flex flex-col gap-1">
+          <p>
+            <span class="font-medium text-gray-700"
+              >Top Level Domain: {` `}</span
+            >
+            {data[0].tld[0]}
+          </p>
+          <p>
+            <span class="font-medium text-gray-700">Currencies: {` `}</span>
+            {currencies.map((curr) => <p class="ml-4"> - {curr}</p>)}
+          </p>
+          <p>
+            <span class="font-medium text-gray-700">Languages: {` `}</span>
+            {languages.map((lang) => <p class="ml-4"> - {lang}</p>)}
+          </p>
+        </div>
+      </div>
+      <div>
+        <span class="font-medium mr-2">Border Countries:</span>
+        {
+          data[0].borders
+            ? data[0].borders.map((border: string) => (
+                <p class="px-4 inline-block py-2 border rounded-md mr-2">
+                  {border}
+                </p>
+              ))
+            : "No borders"
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

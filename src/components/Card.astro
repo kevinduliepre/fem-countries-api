@@ -1,0 +1,40 @@
+---
+interface Props {
+  name: string;
+  url: string;
+  population: number;
+  region: string;
+  capital: string;
+  flag: string;
+}
+
+const { name, url, flag, population, region, capital } = Astro.props;
+---
+
+<div class="rounded-md overflow-hidden group hover:bg-gray-50/70 border">
+  <a href={`/country/${url}`}>
+    <div class="h-[150px]">
+      <img
+        src={flag}
+        alt={`${name}'s flag`}
+        class="h-full group-hover:scale-105 transition-transform w-full object-cover"
+      />
+    </div>
+    <div class="p-2">
+      <h2 class="font-bold mb-2 text-lg text-gray-800">
+        {name}
+      </h2>
+      <p>
+        <span class="font-medium text-gray-700">Population: {` `}</span>{
+          population.toLocaleString()
+        }
+      </p>
+      <p>
+        <span class="font-medium text-gray-700">Region: {` `}</span>{region}
+      </p>
+      <p>
+        <span class="font-medium text-gray-700">Capital: {` `}</span>{capital}
+      </p>
+    </div>
+  </a>
+</div>

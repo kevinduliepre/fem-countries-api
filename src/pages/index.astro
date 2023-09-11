@@ -1,0 +1,47 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const res = await fetch("https://restcountries.com/v3.1/all");
+const data = await res.json();
+import Card from "../components/Card.astro";
+import type { countryType } from "../types/country";
+
+const regions = ["Africa", "America", "Asia", "Europe", "Oceania"];
+---
+
+<BaseLayout title="Home">
+  <main class="max-w-6xl mx-auto py-6">
+    <div class="flex justify-between mt-6 mb-12">
+      <input
+        type="search"
+        placeholder="Search for a country..."
+        name="country"
+        class="border p-2 rounded-md w-1/2"
+      />
+      <div>
+        <!-- <label for="country">Filter By Region</label> -->
+        <select
+          name="country"
+          id="country"
+          class="cursor-pointer border p-2 ml-2 rounded-md"
+        >
+          <option value="" selected>Filter By Region</option>
+          {regions.map((region) => <option>{region}</option>)}
+        </select>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {
+        data.map((d: countryType) => (
+          <Card
+            url={d.ccn3}
+            flag={d.flags.png}
+            name={d.name.common}
+            population={d.population}
+            region={d.region}
+            capital={d.capital}
+          />
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>
